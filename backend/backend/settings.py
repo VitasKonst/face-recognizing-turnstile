@@ -124,7 +124,10 @@ REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'message',
 }
 
-AUTHENTICATION_BACKENDS = ['authentication.backends.JWTAuthentication', ]
+AUTHENTICATION_BACKENDS = [
+    'authentication.backends.JWTAuthentication',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 try:
     from .local_settings import *
