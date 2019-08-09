@@ -91,8 +91,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self._generate_jwt_token()
 
     class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
+        verbose_name = _('Клиент')
+        verbose_name_plural = _('клиенты')
 
     def clean(self):
         super().clean()
@@ -128,9 +128,11 @@ class Attendance(models.Model):
         (1, 'Выход'),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date = models.DateTimeField(_('passing time'), auto_now=True)
-    side = models.IntegerField(_('passing side'), choices=PASSING_SIDE_CHOICES, default=0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='клиент')
+    date = models.DateTimeField(_('дата посещения'), default=datetime.datetime.now())
+    side = models.IntegerField(_('направление'), choices=PASSING_SIDE_CHOICES, default=0)
 
     class Meta:
         ordering = ('date', )
+        verbose_name = _('посещение')
+        verbose_name_plural = _('посещения')
