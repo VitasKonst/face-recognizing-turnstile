@@ -122,6 +122,7 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "backend", "media")
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'authentication.core.exceptions.core_exception_handler',
     'NON_FIELD_ERRORS_KEY': 'message',
+    'DEFAULT_RENDERER_CLASSES': ['authentication.core.renderers.MyJSONRenderer', ],
 }
 
 AUTHENTICATION_BACKENDS = [

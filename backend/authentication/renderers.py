@@ -1,9 +1,8 @@
-import json
-from rest_framework.renderers import JSONRenderer
+from .core.renderers import MyJSONRenderer
 
 
-class UserJSONRenderer(JSONRenderer):
-    charset = 'utf-8'
+class UserJSONRenderer(MyJSONRenderer):
+    header = 'user'
 
     def render(self, data, media_type=None, renderer_context=None):
         token = data.get('token', None)
@@ -11,23 +10,11 @@ class UserJSONRenderer(JSONRenderer):
         if token is not None and isinstance(token, bytes):
             data['token'] = token.decode('utf-8')
 
-        if data.get('errors', None) is not None:
-            return json.dumps(data)
-
-        return json.dumps({
-            'user': data
-        })
+        return super().render(data=data, media_type=media_type, renderer_context=renderer_context)
 
 
-class AttendanceJSONRenderer(JSONRenderer):
-    charset = 'utf-8'
+class AttendanceJSONRenderer(MyJSONRenderer):
+    header = 'attendance'
 
     def render(self, data, media_type=None, renderer_context=None):
-        errors = data.get('errors', None)
-
-        if errors is not None:
-            return json.dumps(data)
-
-        return json.dumps({
-            'attendance': data
-        })
+        return super().render(data=data, media_type=media_type, renderer_context=renderer_context)

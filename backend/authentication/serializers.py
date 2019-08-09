@@ -2,7 +2,7 @@ from django.conf import settings
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
-from .models import User
+from .models import User, Attendance
 
 
 def authenticate(username=None, password=None, **kwargs):
@@ -52,6 +52,14 @@ class LoginSerializer(serializers.ModelSerializer):
         }
 
 
+class AttendanceSerializer(serializers.HyperlinkedModelSerializer):
+    date = serializers.DateTimeField(format='%d.%m.%Y')
+
+    class Meta:
+        model = Attendance
+        fields = ('date', 'side', )
+
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         max_length=128,
@@ -62,10 +70,11 @@ class UserSerializer(serializers.ModelSerializer):
     date_of_birth = serializers.DateField(format='%d.%m.%Y', input_formats=settings.DATE_INPUT_FORMATS)
     is_active = serializers.BooleanField(read_only=True)
     portrait = serializers.SerializerMethodField()
+    attendance = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        exclude = ['is_superuser', 'is_staff', 'groups', 'user_permissions']
+        exclude = ['is_superuser', 'is_staff', 'groups', 'user_permissions', 'last_login']
         read_only_fields = ('token', )
 
     def update(self, instance, validated_data):
@@ -87,7 +96,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         return 'https://static.productionready.io/images/smiley-cyrus.jpg'
 
-
-class AttendanceSerializer(serializers.ModelSerializer):
-    time = serializers.DateTimeField(format='%d.%m.%Y %H:%M', read_only=True)
-    side = serializers.IntegerField()
+    def get_attendance(self, obj):
+        queryset = Attendance.objects.filter(user=obj, side=0)
+        serializer = AttendanceSerializer(queryset, many=True)
+        return serializer.data

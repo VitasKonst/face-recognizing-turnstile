@@ -30,7 +30,15 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     backend = JWTAuthentication()
 
     def retrieve(self, request, *args, **kwargs):
-        user = self.backend.authenticate(request)[0]
+        try:
+            user = self.backend.authenticate(request)[0]
+        except TypeError:
+            return Response({
+                'errors': {
+                    'message': 'Ошибка доступа.'
+                }
+            })
+
         if user.id is not self.kwargs.get('pk'):
             return Response({
                 'errors': {
@@ -43,7 +51,15 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
-        user = self.backend.authenticate(request)[0]
+        try:
+            user = self.backend.authenticate(request)[0]
+        except TypeError:
+            return Response({
+                'errors': {
+                    'message': 'Ошибка доступа.'
+                }
+            })
+
         if user.id is not self.kwargs.get('pk'):
             return Response({
                 'errors': {

@@ -128,9 +128,9 @@ class Attendance(models.Model):
         (1, 'Выход'),
     )
 
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    time = models.DateTimeField(_('passing time'), auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField(_('passing time'), auto_now=True)
     side = models.IntegerField(_('passing side'), choices=PASSING_SIDE_CHOICES, default=0)
 
     class Meta:
-        ordering = ('time', )
+        ordering = ('date', )

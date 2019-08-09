@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
 from authentication.backends import JWTAuthentication
+from django.contrib.auth.backends import ModelBackend
 from django.views.static import serve
 from django.conf import settings
 from django.shortcuts import HttpResponse
@@ -10,11 +11,13 @@ from authentication.models import User
 
 
 def protected_serve(request, path, document_root=settings.MEDIA_ROOT):
-    try:
-        auth = JWTAuthentication()
-        user = auth.authenticate(request=request)[0]
-    except User.DoesNotExist and TypeError:
-        return HttpResponse("Sorry you don't have permission to access this file")
+    user = request.user
+    if not user.is_staff:
+        try:
+            auth = JWTAuthentication()
+            user = auth.authenticate(request=request)[0]
+        except User.DoesNotExist and TypeError:
+            return HttpResponse("Sorry you don't have permission to access this file")
 
     user_portrait_url = user.get_portrait()
 
