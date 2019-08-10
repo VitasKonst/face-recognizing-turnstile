@@ -3,7 +3,6 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
 from authentication.backends import JWTAuthentication
-from django.contrib.auth.backends import ModelBackend
 from django.views.static import serve
 from django.conf import settings
 from django.shortcuts import HttpResponse
@@ -30,7 +29,7 @@ def protected_serve(request, path, document_root=settings.MEDIA_ROOT):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/authentication/', include('authentication.urls')),
-    path('api/v1/', include('main.urls')),
+    path('api/v1/pass', include('main.urls')),
     re_path(r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')), protected_serve),
 ]
 

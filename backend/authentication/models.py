@@ -69,8 +69,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     abonement_type = models.IntegerField(_('тип абонемента'), choices=ABONEMENT_TYPE_CHOICES,
                                          default=0, )
     abonement_registration_date = models.DateField(_('дата регистрации абонемента'), auto_now=True, )
-    abonement_visits_left = models.IntegerField(_('посещений доступно'), choices=ABONEMENT_VISITS_CHOICES,
-                                                help_text=required_field_warning, default=0)
     abonement_validity_period = models.IntegerField(_('период действия'), choices=ABONEMENT_PERIOD_CHOICES,
                                                     help_text=required_field_warning, default=0)
 

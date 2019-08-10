@@ -5,6 +5,7 @@ from django.contrib.admin import ModelAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from authentication.models import User, Attendance
+from django.contrib.auth.models import Group
 
 
 admin.site.site_header = 'Управление комплексом турникетов'
@@ -51,15 +52,16 @@ class UserAdmin(BaseUserAdmin):
         'last_name',
         'first_name',
         'email',
-        'is_superuser',)
-    list_filter = ('is_superuser',)
+        'is_staff',)
+    list_filter = ('is_staff',)
     fieldsets = (
         (None, {'fields': ('phone', 'password',)}),
         ('Биометрические данные', {'fields': ('portrait', )}),
-        ('Персональные данные', {'fields': ('last_name', 'first_name', 'patronymic', 'gender', 'email', 'date_of_birth', 'national_id', 'date_joined',)}),
+        ('Персональные данные', {'fields': ('last_name', 'first_name', 'patronymic', 'gender', 'email', 'date_of_birth',
+                                            'national_id', 'date_joined',)}),
         ('Информация об абонементе', {'fields': ('abonement_type', 'abonement_registration_date',
-                                                 'abonement_validity_period', 'abonement_visits_left', )}),
-        ('Разрешения', {'fields': ('is_superuser', )}),
+                                                 'abonement_validity_period', )}),
+        ('Разрешения', {'fields': ('is_staff', )}),
     )
 
     readonly_fields = ('date_joined', 'abonement_registration_date', )
@@ -69,8 +71,8 @@ class UserAdmin(BaseUserAdmin):
         ('Биометрические данные', {'classes': ('wide',), 'fields': ('portrait', )}),
         ('Персональные данные', {'classes': ('wide',), 'fields': ('last_name', 'first_name', 'patronymic', 'email',
                                                                   'gender', 'date_of_birth', 'national_id',)}),
-        ('Информация об абонементе', {'classes': ('wide',), 'fields': ('abonement_type', 'abonement_validity_period',
-                                                                       'abonement_visits_left', )}),
+        ('Информация об абонементе', {'classes': ('wide',), 'fields': ('abonement_type', 'abonement_validity_period')}),
+        ('Разрешения', {'fields': ('is_staff', )}),
     )
     search_fields = ('phone_number',)
     ordering = ('date_joined',)
@@ -121,5 +123,7 @@ class AttendanceAdmin(ModelAdmin):
             return self.readonly_fields + ('user', 'date', 'side')
         return self.readonly_fields
 
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Attendance, AttendanceAdmin)
+admin.site.unregister(Group)
