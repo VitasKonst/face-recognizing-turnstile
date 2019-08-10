@@ -71,6 +71,7 @@ class UserSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(read_only=True)
     portrait = serializers.SerializerMethodField()
     attendance = serializers.SerializerMethodField()
+    abonement_type = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -100,3 +101,12 @@ class UserSerializer(serializers.ModelSerializer):
         queryset = Attendance.objects.filter(user=obj, side=0)
         serializer = AttendanceSerializer(queryset, many=True)
         return serializer.data
+
+    def get_abonement_type(self, obj):
+        type = obj.abonement_type
+        if type is 0:
+            return 'Абонемент недействителен'
+        elif type is 1:
+            return 'Абонемент на заданный период'
+        elif type is 2:
+            return 'Абонемент сотрудника'

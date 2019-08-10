@@ -1,6 +1,7 @@
 import jwt
 import os
 import datetime
+from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
@@ -127,7 +128,7 @@ class Attendance(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='клиент')
-    date = models.DateTimeField(_('дата посещения'), default=datetime.datetime.now())
+    date = models.DateTimeField(_('дата посещения'), default=timezone.now)
     side = models.IntegerField(_('направление'), choices=PASSING_SIDE_CHOICES, default=0)
 
     class Meta:
