@@ -1,7 +1,2 @@
-from PIL import Image
-from PIL import ImageFilter
-import imagehash
-
-
-def do_portraits_match(path1, path2):
+def do_portraits_match(url1, url2):
     return True

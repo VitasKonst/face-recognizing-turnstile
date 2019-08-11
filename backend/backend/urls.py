@@ -20,7 +20,7 @@ def protected_serve(request, path, document_root=settings.MEDIA_ROOT):
 
     user_portrait_url = user.get_portrait()
 
-    if user_portrait_url == path:
+    if user_portrait_url == path or user.is_staff:
         return serve(request, path, document_root)
     else:
         return HttpResponse("Sorry you don't have permission to access this file")
